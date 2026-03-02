@@ -34,6 +34,7 @@ public class C_GreedyKnapsack {
         for (int i = 0; i < n; i++) { //создавая каждый конструктором
             items[i] = new Item(input.nextInt(), input.nextInt());
         }
+
         //покажем предметы
         for (Item item : items) {
             System.out.println(item);
@@ -41,7 +42,7 @@ public class C_GreedyKnapsack {
         System.out.printf("Всего предметов: %d. Рюкзак вмещает %d кг.\n", n, W);
 
         //тут необходимо реализовать решение задачи
-        //итогом является максимально воможная стоимость вещей в рюкзаке
+        //итогом является максимально возможная стоимость вещей в рюкзаке
         //вещи можно резать на кусочки (непрерывный рюкзак)
         double result = 0;
         //тут реализуйте алгоритм сбора рюкзака
@@ -49,6 +50,30 @@ public class C_GreedyKnapsack {
         //кроме того, можете описать свой компаратор в классе Item
 
         //ваше решение.
+
+        for (int i = 1; i < items.length; i++) {
+            var current = items[i];
+            int j = i;
+            while (j > 0 && items[j - 1].compareTo(current) > 0) {
+                items[j] = items[j - 1];
+                j--;
+            }
+            items[j] = current;
+        }
+
+        int i = 0;
+        double w = 0;
+        while (i < items.length) {
+            if (items[i].weight <= W - w) {
+                result += items[i].cost;
+                w += items[i].weight;
+            } else {
+                result += items[i].cost * (W - w)/items[i].weight;
+                break;
+            }
+            i++;
+        }
+
 
 
         System.out.printf("Удалось собрать рюкзак на сумму %f\n", result);
@@ -75,9 +100,7 @@ public class C_GreedyKnapsack {
         @Override
         public int compareTo(Item o) {
             //тут может быть ваш компаратор
-
-
-            return 0;
+            return o.cost * this.weight - this.cost * o.weight;
         }
     }
 }
